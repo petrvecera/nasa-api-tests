@@ -43,9 +43,15 @@ information (CPU, RAM etc) directly to the JMeter and the tests. If the backend 
 determine the bottlenecks (DB, some micro-services etc).
 
 
-But what we can test right now with this particular API is the response time of the requests.   
-- During the testing the API response were bellow `250ms` which could be considered as acceptable time. 
-
+*But what we can test right now with this particular API is the response time of the requests.*
+Tested url `https://images-api.nasa.gov/search?q=apollo`
+```
+10 concurent requets - average reponse time ~250ms, max 262ms
+50 concurent requets - average reponse time ~359ms, max 439ms
+100 concurent requets - average reponse time ~1569  ms, max 3758ms
+```
+Keep in mind that no timers(delay before requets) were included. All requests were started in parallel. To simulate real life scenario I would recommend adding random uniform timers (or some other) before each requets.
+Also these tests were stressing only search with the `q` param. Other params might shown different results. 
 
 ## Security testing:
 This is public API without any authorization tokens. It looks like every infromation which is in the DB is shared here. Thus it doesn't seem that security would be priority task of this API. 
@@ -63,7 +69,8 @@ Some of the basic security test is already in place in normal tests:
  - Request content types
  - Accept headers
  - No stacktrace in error messages  ( was not able to trigger error 5xx) 
- - SQL Injections , eval validations 
+ - SQL Injections , eval validations
+ - IP Location source - depending on the nature of the API we might want to block anonymous sources such as TOR 
 
 ## Found issues:
 
