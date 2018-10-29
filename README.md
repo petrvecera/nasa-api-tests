@@ -53,9 +53,28 @@ But what we test right now with this particular API is the response time of the 
 
  
 
-### Found issues:
+## Found issues:
 
-#### 1. Incorrect response format  
+#### 1. Incorrect response on requests after request with error 400
+If you do an incorrect request which leads to error 400, every other request (regardless if they are correct or not)
+is going to get the same error and response as the first bad request for the next 10 seconds.
+
+**Steps to reproduce:**
+1. Make a GET request on `https://images-api.nasa.gov/search?year_start=%22test%22`
+2. Check the response for error `{"reason":"Invalid value year_start=\"test\"."}`
+3. Immediately make a GET request on `https://images-api.nasa.gov/search?year_start=2005`
+4. Check the response  
+
+**Expected result:**
+```
+{"collection": ...}
+```
+**Actual result:**
+```
+{"reason":"Invalid value year_start=\"test\"."}
+```
+
+#### 2. Incorrect response format  
 In the documentation there is stated that: `JSON is returned by all API responses, including errors.` However this ins't true for `ERROR 404`.  
 **Steps to reproduce:**
 1. Make a GET request on `https://images-api.nasa.gov/searchasdfasdfasdf`
@@ -78,25 +97,6 @@ The response is HTML
 
  </body>
 </html>
-```
-
-#### 2. Incorrect response on requests after request with error 400
-If you do an incorrect request which leads to error 400, every other request (regardless if they are correct or not)
-is going to get the same error and response as the first bad request for the next 10 seconds.
-
-**Steps to reproduce:**
-1. Make a GET request on `https://images-api.nasa.gov/search?year_start=%22test%22`
-2. Check the response for error `{"reason":"Invalid value year_start=\"test\"."}`
-3. Immediately make a GET request on `https://images-api.nasa.gov/search?year_start=2005`
-4. Check the response  
-
-**Expected result:**
-```
-{"collection": ...}
-```
-**Actual result:**
-```
-{"reason":"Invalid value year_start=\"test\"."}
 ```
 
 #### 3. Confusing API version stated in the docs
