@@ -37,7 +37,7 @@ load testing, stress testing, endurance testing etc...
 Also the testing would be different if we would test the software with the API or just the API.
 If we should test the software, we would need to deploy it on a server with specific HW setup (VMs). So we can determine how well 
 the software behaves with particular HW and what are its limits. It's important that the HW which performs the tests is more powerful
-than the HW holding the tested software so we can reach it's limits. During performance testing it's important to watch closely 
+than the HW holding the tested software so we can reach it's limits (we can use JMeter Slave mode for distribuated testing). During performance testing it's important to watch closely 
 the server resources. We could leverage plugins such us [PerfMonitor](https://jmeter-plugins.org/wiki/PerfMon/) to get server
 information (CPU, RAM etc) directly to the JMeter and the tests. If the backend server is complex we might also need to 
 determine the bottlenecks (DB, some micro-services etc).
