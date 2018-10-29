@@ -39,11 +39,11 @@ If we should test the software, we would need to deploy it on a server with spec
 the software behaves with particular HW and what are its limits. It's important that the HW which performs the tests is more powerful
 than the HW holding the tested software so we can reach it's limits. During performance testing it's important to watch closely 
 the server resources. We could leverage plugins such us [PerfMonitor](https://jmeter-plugins.org/wiki/PerfMon/) to get server
-information (CPU, RAM etc) directly to the JMeter and the tests. If the backend server is complex we might be also able to 
+information (CPU, RAM etc) directly to the JMeter and the tests. If the backend server is complex we might also need to 
 determine the bottlenecks (DB, some micro-services etc).
 
 
-But what we test right now with this particular API is the response time of the requests.   
+But what we can test right now with this particular API is the response time of the requests.   
 - During the testing the API response were bellow `250ms` which could be considered as acceptable time. 
 
 
@@ -74,10 +74,10 @@ is going to get the same error and response as the first bad request for the nex
 {"reason":"Invalid value year_start=\"test\"."}
 ```
 
-#### 2. Incorrect response format  
-In the documentation there is stated that: `JSON is returned by all API responses, including errors.` However this ins't true for `ERROR 404`.  
+#### 2. Incorrect response format  for error 404 and 414
+In the documentation there is stated that: `JSON is returned by all API responses, including errors.` However this ins't true for `ERROR 404` or `ERROR 414`.  
 **Steps to reproduce:**
-1. Make a GET request on `https://images-api.nasa.gov/searchasdfasdfasdf`
+1. Make a GET request on `https://images-api.nasa.gov/searchasdfasdfasdf` to trigger 404 or make request with 50k length to trigger 414.
 2. Check the response format  
 
 **Expected result:**  
@@ -98,6 +98,9 @@ The response is HTML
  </body>
 </html>
 ```
+
+*Possible cause:*
+These errors are handled by NGINX proxy server which is deployed before the API. 
 
 #### 3. Confusing API version stated in the docs
 The [documentation](https://images.nasa.gov/docs/images.nasa.gov_api_docs.pdf) states that it should be 
