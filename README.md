@@ -24,6 +24,35 @@ Thus the testing doesn't included these properties as it seems not relevant to t
 
 This is most likely due to the fact the API itself is consumed by JS Angular web app hosted at https://images.nasa.gov  
 
+## Automated testing:
+
+**TODO** 
+
+
+## Performance testing:
+If we would need to fully test this API. Performance testing should be included. I would personally use tools
+JMeter or Gatling as I have personal experience with them. Also it would depend on what types of test we would like to perform -
+load testing, stress testing, endurance testing etc...  
+
+Also the testing would be different if we would test the software with the API or just the API.
+If we should test the software, we would need to deploy it on a server with specific HW setup. So we can determine how well 
+the software behaves with particular HW and what are its limits. It's important that the HW which performs the tests is more powerful
+than the HW holding the tested software so we can reach it's limits. During performance testing it's important to watch closely 
+the server resources. We could leverage plugins such us [PerfMonitor](https://jmeter-plugins.org/wiki/PerfMon/) to get server
+information (CPU, RAM etc) directly to the JMeter and the tests. If the backend server is complex we might be also able to 
+determine the bottlenecks (DB, some micro-services etc).
+
+
+But what we test right now with this particular API is the response time of the requests.   
+- During the testing the API response were bellow `250ms` which could be considered as acceptable time. 
+
+
+## Security testing:
+**TODO**
+
+
+ 
+
 ### Found issues:
 
 #### 1. Incorrect response format  
@@ -115,7 +144,7 @@ to determine if the issue is bug or just suggestion for improvement.
 
 #### 1. Inconsistency around response JSON structure - key links
 When you create a search request which has more than 100 results. In the main JSON response there is 
-key `links` which has array of values. The array holds one object and that is link to another 100 or if
+key `links` which has array of values. The array holds one or 2 objects and that is link to another 100 or if
 you go to page2 it has links to previous side. 
 
 ```
