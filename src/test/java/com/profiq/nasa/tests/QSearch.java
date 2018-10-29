@@ -19,7 +19,7 @@ public class QSearch {
      * @param jsonData Direct data from the function getSearchAPIDataResponse()
      * @param testedString
      */
-    public static void verifyQSearchResults(JSONObject jsonData, String testedString){
+    public static void verifySearchResults(JSONObject jsonData, String testedString){
 
         JSONArray responseData = Utils.extractItemsFromJSONResponse(jsonData);
 
@@ -46,7 +46,7 @@ public class QSearch {
             }
         };
 
-        verifyQSearchResults(Utils.getSearchAPIDataResponse(query), testedString);
+        verifySearchResults(Utils.getSearchAPIDataResponse(query), testedString);
     }
 
     @Test

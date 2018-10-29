@@ -19,7 +19,7 @@ public class TitleSearch
      * @param inputData
      * @param testedString
      */
-    public static void verifyTitleSearchResults(JSONObject inputData, String testedString){
+    public static void verifySearchResults(JSONObject inputData, String testedString){
 
         JSONArray responseData = Utils.extractItemsFromJSONResponse(inputData);
 
@@ -44,7 +44,7 @@ public class TitleSearch
             }
         };
 
-        verifyTitleSearchResults(Utils.getSearchAPIDataResponse(query), testedString);
+        verifySearchResults(Utils.getSearchAPIDataResponse(query), testedString);
     }
 
     @Test

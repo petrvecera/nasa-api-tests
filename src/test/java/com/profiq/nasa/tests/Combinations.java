@@ -24,8 +24,8 @@ public class Combinations {
 
         JSONObject data = Utils.getSearchAPIDataResponse(query);
 
-        MediaSearch.verifyMediaTypeSearchResults(data, testedMediaString);
-        QSearch.verifyQSearchResults(data, testedQSearchString);
+        MediaSearch.verifySearchResults(data, testedMediaString);
+        QSearch.verifySearchResults(data, testedQSearchString);
     }
 
     @Test
@@ -44,8 +44,8 @@ public class Combinations {
 
         JSONObject data = Utils.getSearchAPIDataResponse(query);
 
-        MediaSearch.verifyMediaTypeSearchResults(data, testedMediaString);
-        QSearch.verifyQSearchResults(data, testedQSearchString);
-        TitleSearch.verifyTitleSearchResults(data, testedTitleString);
+        MediaSearch.verifySearchResults(data, testedMediaString);
+        QSearch.verifySearchResults(data, testedQSearchString);
+        TitleSearch.verifySearchResults(data, testedTitleString);
     }
 }

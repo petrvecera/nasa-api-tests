@@ -18,7 +18,7 @@ public class MediaSearch {
      * @param inputData
      * @param testedString
      */
-    public static void verifyMediaTypeSearchResults(JSONObject inputData, String testedString){
+    public static void verifySearchResults(JSONObject inputData, String testedString){
 
         JSONArray responseData = Utils.extractItemsFromJSONResponse(inputData);
 
@@ -27,7 +27,7 @@ public class MediaSearch {
         for (int i = 0; i < responseData.length(); i++) {
             JSONObject item = responseData.getJSONObject(i);
             JSONObject data = item.getJSONArray("data").getJSONObject(0);
-            String mediaType = data.getString("media_type");
+                String mediaType = data.getString("media_type");
 
             if (testedString.equals("audio,%20image")){
                 Assert.assertTrue(mediaType.equals("audio") || mediaType.equals("image"));
@@ -47,7 +47,7 @@ public class MediaSearch {
             }
         };
 
-        verifyMediaTypeSearchResults(Utils.getSearchAPIDataResponse(query), testedString);
+        verifySearchResults(Utils.getSearchAPIDataResponse(query), testedString);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class MediaSearch {
             }
         };
 
-        verifyMediaTypeSearchResults(Utils.getSearchAPIDataResponse(query), testedString);
+        verifySearchResults(Utils.getSearchAPIDataResponse(query), testedString);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class MediaSearch {
             }
         };
 
-        verifyMediaTypeSearchResults(Utils.getSearchAPIDataResponse(query), testedString);
+        verifySearchResults(Utils.getSearchAPIDataResponse(query), testedString);
     }
 
     @Test
