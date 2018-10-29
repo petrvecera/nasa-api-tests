@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class QSearch {
 
@@ -37,7 +38,7 @@ public class QSearch {
     }
 
     @Test
-    public void QSearchAWithLongQuery() throws IOException {
+    public void QSearchWithLongQuery() throws IOException {
         final String testedString = Utils.generateRandomString(200);
 
         Map<String, String> query = new HashMap<String, String>(){
@@ -48,12 +49,11 @@ public class QSearch {
 
         JSONObject responseData = Utils.getSearchAPIDataResponse(query);
 
-
         Assert.assertEquals(responseData.getJSONObject("collection").getJSONArray("items").length(),0);
     }
 
     @Test
-    public void QSearchResponsesEmpty() throws IOException {
+    public void QSearchResponsesEmpty() throws IOException, InterruptedException {
         final String testedString = "";
 
         Map<String, String> query = new HashMap<String, String>(){
@@ -64,10 +64,45 @@ public class QSearch {
 
         JSONObject responseData = Utils.getSearchAPIDataResponse(query, 400);
         Assert.assertEquals(responseData.getString("reason"), "Expected 'q' text search parameter or other keywords.");
+        // We need to sleep after 400, see issue https://github.com/petrvecera/nasa-api-tests#2-incorrect-response-on-requests-after-request-with-error-400
+        TimeUnit.SECONDS.sleep(10);
     }
 
     @Test
-    public void QSearchAWithExtremeLongQuery() throws IOException {
+    public void QSearchWithSpecialCharacters() throws IOException, InterruptedException {
+        final String testedString = "!'()*+,-./:;<>@[\\]^_`{|}~";
+
+        Map<String, String> query = new HashMap<String, String>(){
+            {
+                put("q", testedString);
+            }
+        };
+
+        JSONObject responseData = Utils.getSearchAPIDataResponse(query,400);
+
+        Assert.assertEquals(responseData.getString("reason"),"Invalid search parameter: <>@[\\]^_`{|}~");
+        // We need to sleep after 400, see issue https://github.com/petrvecera/nasa-api-tests#2-incorrect-response-on-requests-after-request-with-error-400
+        TimeUnit.SECONDS.sleep(10);
+    }
+
+    @Test
+    public void QSearchWithSpecialCharacters2() throws IOException {
+        final String testedString = "<>+.,:`!@#%^&*()";
+
+        Map<String, String> query = new HashMap<String, String>(){
+            {
+                put("q", testedString);
+            }
+        };
+
+        JSONObject responseData = Utils.getSearchAPIDataResponse(query,200);
+
+        Assert.assertEquals(responseData.getJSONObject("collection").getJSONArray("items").length(),0);
+    }
+
+
+    @Test
+    public void QSearchWithExtremeLongQuery() throws IOException {
         final String testedString = Utils.generateRandomString(1600);
 
         Map<String, String> query = new HashMap<String, String>(){
@@ -79,6 +114,19 @@ public class QSearch {
         JSONObject responseData = Utils.getSearchAPIDataResponse(query);
 
         Assert.assertEquals(responseData.getJSONObject("collection").getJSONArray("items").length(),0);
+    }
+
+    @Test (groups = {"bug"})
+    public void QSearchTheTopBoundary() throws IOException {
+        final String testedString = Utils.generateRandomString(50000);
+
+        Map<String, String> query = new HashMap<String, String>(){
+            {
+                put("q", testedString);
+            }
+        };
+
+        JSONObject responseData = Utils.getSearchAPIDataResponse(query, 414);
     }
 
 
