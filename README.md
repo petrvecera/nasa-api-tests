@@ -43,12 +43,12 @@ information (CPU, RAM etc) directly to the JMeter and the tests. If the backend 
 determine the bottlenecks (DB, some micro-services etc).
 
 
-*But what we can test right now with this particular API is the response time of the requests.*
+**But what we can test right now with this particular API is the response time of the requests.**  
 Tested url `https://images-api.nasa.gov/search?q=apollo`
 ```
 10 concurent requets - average reponse time ~250ms, max 262ms
 50 concurent requets - average reponse time ~359ms, max 439ms
-100 concurent requets - average reponse time ~1569  ms, max 3758ms
+100 concurent requets - average reponse time ~1569ms, max 3758ms
 ```
 Keep in mind that no timers(delay before requets) were included. All requests were started in parallel. To simulate real life scenario I would recommend adding random uniform timers (or some other) before each requets.
 Also these tests were stressing only search with the `q` param. Other params might shown different results. 
