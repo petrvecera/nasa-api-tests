@@ -27,6 +27,13 @@ public class Utils {
         return MessageFormat.format("{0}{1}", apiHost, searchEndPoint);
     }
 
+    /**
+     * Default way to make an HTTP connection. Expects the correct behaviour. (response 200)
+     * @param url Any full URL
+     * @param requestMethod Can be "GET", "POST" etc
+     * @return HttpURLConnection
+     * @throws IOException
+     */
     public static HttpURLConnection makeHTTPConnection(String url, String requestMethod) throws IOException {
 
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
@@ -40,6 +47,14 @@ public class Utils {
         return con;
     }
 
+    /**
+     * Make http connection but you can select the response code
+     * @param url full url
+     * @param requestMethod Can be "GET", "POST" etc
+     * @param responseCode You can enter response code which you are expecting for it to return.
+     * @return HttpURLConnection
+     * @throws IOException
+     */
     public static HttpURLConnection makeHTTPConnection(String url, String requestMethod, int responseCode) throws IOException {
 
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
@@ -53,6 +68,12 @@ public class Utils {
         return con;
     }
 
+    /**
+     * Parse the output of the request
+     * @param con HttpURLConnection
+     * @return JSONObject with all the data
+     * @throws IOException
+     */
     public static JSONObject parseJSONResponse(HttpURLConnection con) throws IOException {
 
         BufferedReader in;
@@ -73,6 +94,11 @@ public class Utils {
         return new JSONObject(response.toString());
     }
 
+    /**
+     * Build the url for the Search API endpoint
+     * @param query Of the params
+     * @return Full url for the request
+     */
     private static String buildSearchAPIUrl(Map<String, String> query) {
         StringBuilder url = new StringBuilder(Utils.getFullUrlToSearch() + "?");
 
@@ -87,11 +113,20 @@ public class Utils {
         return url.toString();
     }
 
+    /**
+     * TEST - This functions tests that the version object  is present in the response JSON
+     * @param data
+     */
     public static void testVersion(JSONObject data){
         String version = data.getJSONObject("collection").getString("version");
         Assert.assertEquals(version, Utils.APIVersion);
     }
 
+    /**
+     * TEST - This function tests that JSON structure is correct.
+     * @param data
+     * @param links
+     */
     public static void testJSONStructure(JSONObject data, boolean links){
         Assert.assertTrue(data.has("collection"));
         data = data.getJSONObject("collection");
@@ -109,15 +144,31 @@ public class Utils {
         JSONArray items = data.getJSONArray("items");
     }
 
+    /**
+     * TEST - This function tests if href param is present in all responses and that it's correct.
+     * @param data
+     * @param url
+     */
     public static void testHrefParam(JSONObject data,String url){
         String hrefUrl = data.getJSONObject("collection").getString("href");
         Assert.assertEquals(hrefUrl, url);
     }
 
+    /**
+     * Extract the items key from the JSON Object
+     * @param data
+     * @return
+     */
     public static JSONArray extractItemsFromJSONResponse(JSONObject data){
         return data.getJSONObject("collection").getJSONArray("items");
     }
 
+    /**
+     * Makes HTTP request, parses the response into JSON, verifies href, stucture and version
+     * @param query
+     * @return
+     * @throws IOException
+     */
     public static JSONObject getSearchAPIDataResponse(Map<String, String> query) throws IOException {
         String url = Utils.buildSearchAPIUrl(query);
         JSONObject data = parseJSONResponse(makeHTTPConnection(url, "GET", 200));
@@ -127,7 +178,14 @@ public class Utils {
         return data;
     }
 
-
+    /**
+     * Makes HTTP request, parses the response into JSON, verifies href, structure and version
+     * You can enter
+     * @param query
+     * @param responseCode
+     * @return
+     * @throws IOException
+     */
     public static JSONObject getSearchAPIDataResponse(Map<String, String> query, int responseCode) throws IOException {
         String url = Utils.buildSearchAPIUrl(query);
         JSONObject data = parseJSONResponse(makeHTTPConnection(url, "GET", responseCode));
@@ -140,6 +198,11 @@ public class Utils {
         return data;
     }
 
+    /**
+     * Generates random string based on the input lenght
+     * @param length
+     * @return
+     */
     public static String generateRandomString(int length){
         String characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
