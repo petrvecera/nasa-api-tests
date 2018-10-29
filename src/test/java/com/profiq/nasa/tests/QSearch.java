@@ -13,6 +13,28 @@ import java.util.concurrent.TimeUnit;
 
 public class QSearch {
 
+    /**
+     * This function can test results for the Q param string
+     * AKA it verifies if all the results are correctly selected based on the Q param
+     * @param jsonData Direct data from the function getSearchAPIDataResponse()
+     * @param testedString
+     */
+    public static void verifyQSearchResults(JSONObject jsonData, String testedString){
+
+        JSONArray responseData = Utils.extractItemsFromJSONResponse(jsonData);
+
+        Assert.assertTrue(responseData.length() > 0);
+
+        for (int i = 0; i < responseData.length(); i++) {
+            JSONObject item = responseData.getJSONObject(i);
+            JSONObject data = item.getJSONArray("data").getJSONObject(0);
+            String description = data.getString("description");
+            String title = data.getString("title");
+
+            Assert.assertTrue(description.toLowerCase().contains(testedString) || title.toLowerCase().contains(testedString));
+        }
+    }
+
 
     @Test
     public void QSearchHasCorrectData() throws IOException {
@@ -24,17 +46,7 @@ public class QSearch {
             }
         };
 
-        JSONArray responseData = Utils.extractItemsFromJSONResponse(Utils.getSearchAPIDataResponse(query));
-
-        for (int i = 0; i < responseData.length(); i++) {
-            JSONObject item = responseData.getJSONObject(i);
-            JSONObject data = item.getJSONArray("data").getJSONObject(0);
-            String description = data.getString("description");
-            String title = data.getString("title");
-
-            Assert.assertTrue(description.toLowerCase().contains(testedString) || title.toLowerCase().contains(testedString));
-        }
-
+        verifyQSearchResults(Utils.getSearchAPIDataResponse(query), testedString);
     }
 
     @Test
