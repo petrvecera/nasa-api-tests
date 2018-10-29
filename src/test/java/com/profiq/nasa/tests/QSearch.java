@@ -87,7 +87,7 @@ public class QSearch {
 
     @Test
     public void QSearchWithSpecialCharacters2() throws IOException {
-        final String testedString = "<>+.,:`!@#%^&*()";
+        final String testedString = "<>+.,:%60!@";
 
         Map<String, String> query = new HashMap<String, String>(){
             {
