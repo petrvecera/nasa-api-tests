@@ -35,7 +35,7 @@ JMeter or Gatling as I have personal experience with them. Also it would depend 
 load testing, stress testing, endurance testing etc...  
 
 Also the testing would be different if we would test the software with the API or just the API.
-If we should test the software, we would need to deploy it on a server with specific HW setup. So we can determine how well 
+If we should test the software, we would need to deploy it on a server with specific HW setup (VMs). So we can determine how well 
 the software behaves with particular HW and what are its limits. It's important that the HW which performs the tests is more powerful
 than the HW holding the tested software so we can reach it's limits. During performance testing it's important to watch closely 
 the server resources. We could leverage plugins such us [PerfMonitor](https://jmeter-plugins.org/wiki/PerfMon/) to get server
@@ -48,10 +48,22 @@ But what we can test right now with this particular API is the response time of 
 
 
 ## Security testing:
-**TODO**
+This is public API without any authorization tokens. It looks like every infromation which is in the DB is shared here. Thus it doesn't seem that security would be priority task of this API. 
 
+**SSL:**
+- The certificate deployed on the server is fully valid without any known vulnerabilites - tested by https://www.digicert.com/help/
+- HTTPS Redirect:  
+   - Any http:// requets, such us http://images-api.nasa.gov correctly redirects to https://
 
+Some of the basic security test is already in place in normal tests:
+ - Input validation
+ - Restricted HTTP methods (POST, PUT, DELETE ... )
  
+ What could be tested more:
+ - Request content types
+ - Accept headers
+ - No stacktrace in error messages  ( was not able to trigger error 5xx) 
+ - SQL Injections , eval validations 
 
 ## Found issues:
 
@@ -200,15 +212,9 @@ The `links` key should be present at all times but the array should be empty whe
     }
 }
 ```
-
-
-
-
+#### 2. Improved documentation
+The documentation lacks the information about some parts of the API. It's not hard to understand how the API behaves without the documetnation. But without it we can't be sure how the developers can treat the undocumented parts. If they can use them? Is it guranteed that will not chnage? And other questions. 
 
 ### Used tools / frameworks
 - Automated tests written in Java and TestNG
 - For manual testing [Postman](https://www.getpostman.com/) and curl used 
-
-
-
-
