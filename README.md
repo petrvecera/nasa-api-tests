@@ -26,8 +26,67 @@ This is most likely due to the fact the API itself is consumed by JS Angular web
 
 ## Automated testing:
 
-**TODO** 
+#### General testing `profiq/nasa/tests/General.java`
+- Testing general responses of the API
 
+For example:
+ - Verify status code 400
+ - Verify response for error 400 is JSON
+ - Verify status code 404
+ - Verify response for error 404 is JSON
+ - Verify response for OPTIONS, POST  
+ TODO: We could add testing of the other responses such as PUT, DELETE, PATCH etc
+ 
+ #### Univerals testing `profiq/nasa/Utils.java`
+ - Class `Utils` have several helper method but it also consist of several tests:  
+ For each correct request it's expected the following to be true:  
+   - Response code 200
+   - Response is JSON
+   - Response have correct "href" object
+   - Response have correct JSON structure  
+**Every expected correct request ( request which is expected to end with response code 200 ) is automatically tested for these assertions.**
+ 
+ #### Specific param testing:  
+ Each param of the `/search` end point has it's own test class. For example `profiq/nasa/tests/QSearch.java`
+ Also class for each param has it's own method `verifySearchResults` which verifies the search results for the particular param.
+ 
+ **Param `q` tests:**  
+   - Verify that search is returning only the data which really have values from the Q search  
+   - Verify long query 200 chars  
+   - Verify very long query 1600 chars
+   - Verify top boundary ( 50k chars)
+   - Verify bottom boundary ( empty string)
+   - Verify special characters which are not allowed
+   - Verify special characters which are allowed
+
+ **Param `media_type` tests:**  
+   - Verify that search is returning only the data which has correct media_type for type `audio`
+   - Verify that search is returning only the data which has correct media_type for type `image`
+   - Verify that search is returning only the data which has correct media_type for type `image, audio`
+   - Verify bottom boundary ( empty string)   
+   - Verify results from special characters
+   
+ **Param `title` tests:**  
+   - Verify that search is returining items with correct title
+   - Verify empty value  
+    
+TODO: Add tests for other params
+
+#### Param combination testing
+In file `\profiq\nasa\tests\Combinations.java` we have param combination tests.
+Each search param can be used on it's onw but mostly like in combination with other param. That's why Test Class for each param implements function `verifySearchResults` so we can combine multiple params together and than simply run verification for each param used.
+  
+The class consits of tests:
+- CombineMediaAndQSearch
+- CombineMediaQTitleSearch
+
+However there is 13 params in total. Which can be combined at will. Define each combination by hand is not possible. Thus we should use "parametrized" testing in here. I would create function which would generate combinations of the params and could also verify all the responses automatically. Didn't have more time to do. 
+
+
+#### Other TODO tests due to lack of time:
+- When the respones has more than 100 results, there is `link` in the JSON for the next page, the link itself should be tested and this shoudl be also tested with combination with some search params. 
+- Only top structure of the JSON file is tested. It consits of arrays of other JSONObjets, the structure of these sub objets is not tested. 
+  
 
 ## Performance testing:
 If we would need to fully test this API. Performance testing should be included. I would personally use tools
@@ -225,3 +284,4 @@ The documentation lacks the information about some parts of the API. It's not ha
 ### Used tools / frameworks
 - Automated tests written in Java and TestNG
 - For manual testing [Postman](https://www.getpostman.com/) and curl used 
+- For response time JMeter used
